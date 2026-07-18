@@ -1,0 +1,187 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { createLeaveType } from "@/services/leaveTypeService";
+import FormInput from "@/components/ui/FormInput";
+import FormSelect from "@/components/ui/FormSelect";
+import Button from "@/components/ui/Button";
+
+type FormErrors = {
+  name?: string;
+  default_days?: string;
+  is_active?: string;
+};
+
+export default function CreateLeaveTypePage() {
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [defaultDays, setDefaultDays] = useState("");
+  const [isActive, setIsActive] = useState("1");
+
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [loading, setLoading] = useState(false);
+
+  const validateForm = () => {
+    const newErrors: FormErrors = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Leave type name is required.";
+    } else if (name.trim().length < 3) {
+      newErrors.name = "Leave type name must be at least 3 characters.";
+    }
+
+    if (!defaultDays) {
+      newErrors.default_days = "Default days are required.";
+    } else if (Number(defaultDays) < 0) {
+      newErrors.default_days = "Default days cannot be negative.";
+    } else if (Number(defaultDays) > 365) {
+      newErrors.default_days = "Default days cannot be more than 365.";
+    }
+
+    if (isActive === "") {
+      newErrors.is_active = "Status is required.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const isValid = validateForm();
+
+    if (!isValid) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrors({});
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        Swal.fire("Login required", "Please login again.", "error");
+        router.push("/login");
+        return;
+      }
+
+      await createLeaveType({
+        name: name.trim(),
+        default_days: defaultDays,
+        is_active: isActive === "1",
+      });
+
+      Swal.fire("Success", "Leave type created successfully.", "success");
+
+      router.push("/dashboard/leave-types");
+    } catch (error: any) {
+      console.log(error);
+
+      if (error.response?.status === 401) {
+        Swal.fire("Session expired", "Please login again.", "error");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        router.push("/login");
+        return;
+      }
+
+      if (error.response?.status === 403) {
+        Swal.fire(
+          "Not allowed",
+          "You are not allowed to create leave types.",
+          "error"
+        );
+        return;
+      }
+
+      if (error.response?.status === 422) {
+        const backendErrors = error.response.data.errors;
+
+        setErrors({
+          name: backendErrors?.name?.[0],
+          default_days: backendErrors?.default_days?.[0],
+          is_active: backendErrors?.is_active?.[0],
+        });
+
+        Swal.fire(
+          "Validation error",
+          error.response.data.message || "Please check the form fields.",
+          "error"
+        );
+
+        return;
+      }
+
+      Swal.fire("Error", "Failed to create leave type.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="p-6 max-w-2xl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">Add Leave Type</h1>
+        <p className="text-gray-500">
+          Create a new leave type for employee leave requests.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6 border p-6 rounded">
+        <FormInput
+          label="Leave Type Name"
+          value={name}
+          placeholder="Example: Sick Leave"
+          error={errors.name}
+          onChange={setName}
+        />
+
+        <FormInput
+          label="Default Days"
+          type="number"
+          value={defaultDays}
+          placeholder="Example: 10"
+          error={errors.default_days}
+          onChange={setDefaultDays}
+        />
+
+        <FormSelect
+          label="Status"
+          value={isActive}
+          error={errors.is_active}
+          onChange={setIsActive}
+          options={[
+            { label: "Active", value: "1" },
+            { label: "Inactive", value: "0" },
+          ]}
+        />
+
+        <div className="bg-blue-50 text-blue-700 p-4 rounded text-sm">
+          Default days will help admin decide how many yearly leave days this
+          leave type usually has. You can still assign employee-specific
+          balances later.
+        </div>
+
+        <div className="flex gap-3">
+          <Button type="submit" loading={loading}>
+            Create Leave Type
+          </Button>
+
+          <button
+            type="button"
+            onClick={() => router.push("/dashboard/leave-types")}
+            className="bg-gray-200 px-5 py-3 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
