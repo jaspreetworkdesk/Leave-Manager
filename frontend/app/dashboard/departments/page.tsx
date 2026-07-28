@@ -169,9 +169,6 @@ export default function DepartmentsPage() {
     }
   };
 
-  if (loading && departments.length === 0) {
-    return <p className="p-6">Loading departments...</p>;
-  }
 
   return (
     <div className="p-6 space-y-6">
@@ -226,8 +223,12 @@ export default function DepartmentsPage() {
           )}
         </div>
       </div>
-
-      {departments.length === 0 ? (
+        {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading departments...
+        </div>
+      
+      ) : departments.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No departments found.</p>
         </div>

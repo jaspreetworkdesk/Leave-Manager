@@ -95,9 +95,7 @@ export default function DashboardPage() {
     }
   }, [authLoading, user, year]);
 
-  if (authLoading || loading) {
-    return <p className="p-6">Loading dashboard...</p>;
-  }
+
 
   if (!user) {
     return <p className="p-6">User not found.</p>;
@@ -129,6 +127,12 @@ export default function DashboardPage() {
         </div>
       </div>
 
+    {authLoading || loading ? (
+      <div className="flex justify-center items-center p-10">
+        Loading dashboard...
+      </div>
+    ) : (
+    <>
       {isAdmin && adminStats && (
         <div className="space-y-6">
           <div>
@@ -273,6 +277,8 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+    </>
+    )}
     </div>
   );
 }

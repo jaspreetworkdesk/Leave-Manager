@@ -9,6 +9,7 @@ import usePagination, {
   emptyPaginationMeta,
 } from "@/hooks/usePagination";
 import PaginationControls from "@/components/ui/PaginationControls";
+import useDebounce from "@/hooks/useDebounce";
 
 type Leave = {
   id: number;
@@ -70,6 +71,7 @@ export default function MyLeavesPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [statusFilter, setStatusFilter] = useState("");
   const [leaveTypeFilter, setLeaveTypeFilter] = useState("");
   const [dayTypeFilter, setDayTypeFilter] = useState("");
@@ -136,7 +138,7 @@ export default function MyLeavesPage() {
       }
 
       const response = await getMyLeaves({
-        search,
+        search:debouncedSearch,
         status: statusFilter,
         leave_type: leaveTypeFilter,
         day_type: dayTypeFilter,
@@ -178,7 +180,7 @@ export default function MyLeavesPage() {
   useEffect(() => {
     fetchMyLeaves();
   }, [
-    search,
+    debouncedSearch,
     statusFilter,
     leaveTypeFilter,
     dayTypeFilter,
@@ -242,9 +244,6 @@ export default function MyLeavesPage() {
     return "-";
   };
 
-  if (loading) {
-    return <p className="p-6">Loading your leaves...</p>;
-  }
 
   return (
     <div className="p-6 space-y-6">
@@ -439,8 +438,12 @@ export default function MyLeavesPage() {
           </button>
         </div>
       </div>
-
-      {leaves.length === 0 ? (
+        {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading your leaves...
+        </div>
+      
+      ) : leaves.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No leave requests found.</p>
         </div>

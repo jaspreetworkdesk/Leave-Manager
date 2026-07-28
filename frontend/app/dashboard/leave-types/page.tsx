@@ -175,10 +175,6 @@ export default function LeaveTypesPage() {
     }
   };
 
-  if (loading && leaveTypes.length === 0) {
-    return <p className="p-6">Loading leave types...</p>;
-  }
-
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -241,12 +237,16 @@ export default function LeaveTypesPage() {
           </p>
 
           {loading && (
-            <p className="text-sm text-gray-500">Updating results...</p>
+            <p className="text-sm text-gray-500">Loading leave types...</p>
           )}
         </div>
       </div>
-
-      {leaveTypes.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading...
+        </div>
+      
+      ) : leaveTypes.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No leave types found.</p>
         </div>

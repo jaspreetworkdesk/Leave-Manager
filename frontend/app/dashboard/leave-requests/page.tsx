@@ -13,6 +13,7 @@ import usePagination, {
   emptyPaginationMeta,
 } from "@/hooks/usePagination";
 import PaginationControls from "@/components/ui/PaginationControls";
+import useDebounce from "@/hooks/useDebounce";
 
 type User = {
   id: number;
@@ -90,6 +91,7 @@ export default function LeaveRequestsPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [statusFilter, setStatusFilter] = useState("");
   const [leaveTypeFilter, setLeaveTypeFilter] = useState("");
   const [dayTypeFilter, setDayTypeFilter] = useState("");
@@ -156,7 +158,7 @@ export default function LeaveRequestsPage() {
       }
 
       const response = await getLeaveRequests({
-        search,
+        search: debouncedSearch,
         status: statusFilter,
         leave_type: leaveTypeFilter,
         day_type: dayTypeFilter,
@@ -207,7 +209,7 @@ export default function LeaveRequestsPage() {
   useEffect(() => {
     fetchLeaveRequests();
   }, [
-    search,
+    debouncedSearch,
     statusFilter,
     leaveTypeFilter,
     dayTypeFilter,
@@ -381,10 +383,6 @@ export default function LeaveRequestsPage() {
       Swal.fire("Error", "Failed to reject leave request.", "error");
     }
   };
-
-  if (loading) {
-    return <p className="p-6">Loading leave requests...</p>;
-  }
 
   return (
     <div className="p-6 space-y-6">
@@ -580,7 +578,12 @@ export default function LeaveRequestsPage() {
         </div>
       </div>
 
-      {leaves.length === 0 ? (
+        {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading leave requests...
+        </div>
+      
+      ) : leaves.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No leave requests found.</p>
         </div>

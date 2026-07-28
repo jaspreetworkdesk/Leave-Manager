@@ -48,7 +48,7 @@ export default function DashboardLayout({
     <div className="min-h-screen flex">
       {/* Sidebar */}
       <div className="w-64 bg-black text-white p-5">
-        <h2 className="text-2xl font-bold mb-10">Task Manager</h2>
+        <h2 className="text-2xl font-bold mb-10">Leave Manager</h2>
 
         <ul className="space-y-2">
           <li>

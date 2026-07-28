@@ -12,6 +12,7 @@ import usePagination, {
   emptyPaginationMeta,
 } from "@/hooks/usePagination";
 import PaginationControls from "@/components/ui/PaginationControls";
+import useDebounce from "@/hooks/useDebounce";
 
 type User = {
   id: number;
@@ -44,6 +45,8 @@ export default function LeaveBalancesPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+  
   const [leaveTypeFilter, setLeaveTypeFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
 
@@ -102,7 +105,7 @@ export default function LeaveBalancesPage() {
       }
 
       const response = await getLeaveBalances({
-        search,
+        search: debouncedSearch,
         leave_type: leaveTypeFilter,
         year: yearFilter,
         page: currentPage,
@@ -145,7 +148,7 @@ export default function LeaveBalancesPage() {
 
   useEffect(() => {
     fetchLeaveBalances();
-  }, [search, leaveTypeFilter, yearFilter, currentPage]);
+  }, [debouncedSearch, leaveTypeFilter, yearFilter, currentPage]);
 
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
@@ -204,9 +207,7 @@ export default function LeaveBalancesPage() {
     }
   };
 
-  if (loading) {
-    return <p className="p-6">Loading leave balances...</p>;
-  }
+ 
 
   return (
     <div className="p-6 space-y-6">
@@ -298,7 +299,11 @@ export default function LeaveBalancesPage() {
         </p>
       </div>
 
-      {leaveBalances.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading...
+        </div>
+      ) : leaveBalances.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No leave balances found.</p>
         </div>

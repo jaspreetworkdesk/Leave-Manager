@@ -12,6 +12,7 @@ import usePagination, {
   emptyPaginationMeta,
 } from "@/hooks/usePagination";
 import PaginationControls from "@/components/ui/PaginationControls";
+import useDebounce from "@/hooks/useDebounce";
 
 type Department = {
   id: number;
@@ -37,6 +38,7 @@ export default function DesignationsPage() {
   const [departmentLoading, setDepartmentLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [departmentFilter, setDepartmentFilter] = useState("");
 
   const {
@@ -88,7 +90,7 @@ export default function DesignationsPage() {
       }
 
       const response = await getDesignations({
-        search,
+        search: debouncedSearch,
         department_id: departmentFilter,
         page: currentPage,
         per_page: recordsPerPage,
@@ -130,7 +132,7 @@ export default function DesignationsPage() {
 
   useEffect(() => {
     fetchDesignations();
-  }, [search, departmentFilter, currentPage]);
+  }, [debouncedSearch, departmentFilter, currentPage]);
 
   const updateFilter = (setter: (value: string) => void, value: string) => {
     setter(value);
@@ -191,10 +193,6 @@ export default function DesignationsPage() {
       );
     }
   };
-
-  if (loading) {
-    return <p className="p-6">Loading designations...</p>;
-  }
 
   return (
     <div className="p-6 space-y-6">
@@ -267,7 +265,12 @@ export default function DesignationsPage() {
         </p>
       </div>
 
-      {designations.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading designations...
+        </div>
+      
+      ) : designations.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No designations found.</p>
         </div>

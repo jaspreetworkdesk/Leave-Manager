@@ -10,6 +10,7 @@ import usePagination, {
   emptyPaginationMeta,
 } from "@/hooks/usePagination";
 import PaginationControls from "@/components/ui/PaginationControls";
+import useDebounce from "@/hooks/useDebounce";
 
 type User = {
   id: number;
@@ -50,6 +51,7 @@ export default function EmployeesPage() {
   const [dropdownLoading, setDropdownLoading] = useState(true);
 
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [departmentFilter, setDepartmentFilter] = useState("");
   const [designationFilter, setDesignationFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -110,7 +112,7 @@ export default function EmployeesPage() {
       }
 
       const response = await getEmployees({
-        search,
+        search: debouncedSearch,
         department_id: departmentFilter,
         designation_id: designationFilter,
         status: statusFilter,
@@ -155,7 +157,7 @@ export default function EmployeesPage() {
   useEffect(() => {
     fetchEmployees();
   }, [
-    search,
+    debouncedSearch,
     departmentFilter,
     designationFilter,
     statusFilter,
@@ -216,9 +218,7 @@ export default function EmployeesPage() {
     }
   };
 
-  if (loading) {
-    return <p className="p-6">Loading employees...</p>;
-  }
+
 
   return (
     <div className="p-6 space-y-6">
@@ -326,8 +326,12 @@ export default function EmployeesPage() {
           Showing {employees.length} of {meta.total} employees
         </p>
       </div>
-
-      {employees.length === 0 ? (
+        {loading ? (
+        <div className="flex justify-center items-center p-10">
+          Loading employees...
+        </div>
+      
+      ) : employees.length === 0 ? (
         <div className="border p-6 rounded text-center">
           <p className="text-gray-500">No employees found.</p>
         </div>
