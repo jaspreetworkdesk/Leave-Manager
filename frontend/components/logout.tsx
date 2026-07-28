@@ -6,18 +6,18 @@ import Button from "@/components/ui/Button";
 
 export default function LogoutPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [loading, setSubmitLoading] = useState(false);
 
   const handleLogout = () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
       router.push("/login");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

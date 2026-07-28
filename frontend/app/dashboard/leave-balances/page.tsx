@@ -42,7 +42,7 @@ export default function LeaveBalancesPage() {
   const router = useRouter();
 
   const [leaveBalances, setLeaveBalances] = useState<LeaveBalance[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -95,7 +95,7 @@ export default function LeaveBalancesPage() {
 
   const fetchLeaveBalances = async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -138,7 +138,7 @@ export default function LeaveBalancesPage() {
 
       Swal.fire("Error", "Failed to fetch leave balances.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

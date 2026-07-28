@@ -17,7 +17,7 @@ export default function CreateDepartmentPage() {
 
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -44,7 +44,7 @@ export default function CreateDepartmentPage() {
     }
 
     try {
-      setLoading(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const data = {
@@ -74,7 +74,7 @@ export default function CreateDepartmentPage() {
 
       Swal.fire("Error", "Failed to create department.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -97,7 +97,7 @@ export default function CreateDepartmentPage() {
         />
 
         <div className="flex gap-3">
-          <Button type="submit" loading={loading}>
+          <Button type="submit" loading={submitLoading}>
             Add Department
           </Button>
 

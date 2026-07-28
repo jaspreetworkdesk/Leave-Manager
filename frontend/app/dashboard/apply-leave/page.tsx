@@ -42,7 +42,7 @@ export default function ApplyLeavePage() {
   const [balanceLoading, setBalanceLoading] = useState(true);
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setSubmitLoading] = useState(false);
 
   const fetchMyLeaveBalances = async () => {
     try {
@@ -174,7 +174,7 @@ export default function ApplyLeavePage() {
     }
 
     try {
-      setLoading(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const token = localStorage.getItem("token");
@@ -233,7 +233,7 @@ export default function ApplyLeavePage() {
 
       Swal.fire("Error", "Failed to submit leave request.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

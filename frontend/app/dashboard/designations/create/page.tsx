@@ -42,7 +42,7 @@ export default function CreateDesignationPage() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [pageLoading, setPageLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const handleUnauthorized = useCallback(() => {
     Swal.fire("Session expired", "Please login again.", "error");
@@ -130,7 +130,7 @@ export default function CreateDesignationPage() {
     }
 
     try {
-      setSubmitting(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const data = {
@@ -179,7 +179,7 @@ export default function CreateDesignationPage() {
         "error"
       );
     } finally {
-      setSubmitting(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -244,7 +244,7 @@ export default function CreateDesignationPage() {
         */}
 
         <div className="flex gap-3">
-          <Button type="submit" loading={submitting}>
+          <Button type="submit" loading={submitLoading}>
             Add Designation
           </Button>
 

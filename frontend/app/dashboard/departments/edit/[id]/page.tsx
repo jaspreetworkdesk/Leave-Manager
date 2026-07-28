@@ -24,7 +24,7 @@ export default function EditDepartmentPage() {
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [submitLoading, setsubmitLoading] = useState(false);
 
   const fetchDepartment = async () => {
     try {
@@ -85,7 +85,7 @@ export default function EditDepartmentPage() {
     }
 
     try {
-      setSaving(true);
+      setsubmitLoading(true);
       setErrors({});
 
       const data = {
@@ -115,7 +115,7 @@ export default function EditDepartmentPage() {
 
       Swal.fire("Error", "Failed to update department.", "error");
     } finally {
-      setSaving(false);
+      setsubmitLoading(false);
     }
   };
 
@@ -142,7 +142,7 @@ export default function EditDepartmentPage() {
         />
 
         <div className="flex gap-3">
-          <Button type="submit" loading={saving}>
+          <Button type="submit" loading={submitLoading}>
             Update Department
           </Button>
 

@@ -88,7 +88,7 @@ export default function LeaveRequestsPage() {
   const router = useRouter();
 
   const [leaves, setLeaves] = useState<Leave[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -148,7 +148,7 @@ export default function LeaveRequestsPage() {
 
   const fetchLeaveRequests = async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -198,7 +198,7 @@ export default function LeaveRequestsPage() {
 
       Swal.fire("Error", "Failed to fetch leave requests.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

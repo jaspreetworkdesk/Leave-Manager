@@ -43,7 +43,7 @@ export default function DashboardPage() {
   );
 
   const [year, setYear] = useState(String(new Date().getFullYear()));
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
 
   const currentYear = new Date().getFullYear();
 
@@ -57,7 +57,7 @@ export default function DashboardPage() {
     }
 
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       if (isAdmin) {
         const response = await getAdminDashboardStats(year);
@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
       Swal.fire("Error", "Failed to fetch dashboard stats.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

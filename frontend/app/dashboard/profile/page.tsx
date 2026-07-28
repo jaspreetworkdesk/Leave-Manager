@@ -103,7 +103,7 @@ export default function EditEmployeePage() {
   const [designations, setDesignations] = useState<Designation[]>([]);
 
   const [pageLoading, setPageLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [submitLoading, setsubmitLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleUnauthorized = useCallback(() => {
@@ -272,7 +272,7 @@ if (password.trim()) {
     }
 
     try {
-      setSaving(true);
+      setsubmitLoading(true);
       setErrors({});
 
       const token = localStorage.getItem("token");
@@ -346,7 +346,7 @@ if (password.trim()) {
         "error"
       );
     } finally {
-      setSaving(false);
+      setsubmitLoading(false);
     }
   };
 
@@ -406,7 +406,7 @@ if (password.trim()) {
         </div>
 
         <div className="flex gap-3">
-          <Button type="submit" loading={saving}>
+          <Button type="submit" loading={submitLoading}>
             Update Profile
           </Button>
 

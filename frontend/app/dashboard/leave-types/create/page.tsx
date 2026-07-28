@@ -22,7 +22,7 @@ export default function CreateLeaveTypePage() {
   const [isActive, setIsActive] = useState("1");
 
   const [errors, setErrors] = useState<FormErrors>({});
-  const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -60,7 +60,7 @@ export default function CreateLeaveTypePage() {
     }
 
     try {
-      setLoading(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const token = localStorage.getItem("token");
@@ -120,7 +120,7 @@ export default function CreateLeaveTypePage() {
 
       Swal.fire("Error", "Failed to create leave type.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -169,7 +169,7 @@ export default function CreateLeaveTypePage() {
         </div>
 
         <div className="flex gap-3">
-          <Button type="submit" loading={loading}>
+          <Button type="submit" loading={submitLoading}>
             Create Leave Type
           </Button>
 

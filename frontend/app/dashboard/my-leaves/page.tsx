@@ -68,7 +68,7 @@ export default function MyLeavesPage() {
   const router = useRouter();
 
   const [leaves, setLeaves] = useState<Leave[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
@@ -128,7 +128,7 @@ export default function MyLeavesPage() {
 
   const fetchMyLeaves = async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -169,7 +169,7 @@ export default function MyLeavesPage() {
 
       Swal.fire("Error", "Failed to fetch your leaves.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

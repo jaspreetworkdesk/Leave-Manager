@@ -29,7 +29,7 @@ export default function EditLeaveTypePage() {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [pageLoading, setPageLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const fetchLeaveType = async () => {
     try {
@@ -120,7 +120,7 @@ export default function EditLeaveTypePage() {
     }
 
     try {
-      setLoading(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const token = localStorage.getItem("token");
@@ -180,7 +180,7 @@ export default function EditLeaveTypePage() {
 
       Swal.fire("Error", "Failed to update leave type.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -233,7 +233,7 @@ export default function EditLeaveTypePage() {
         </div>
 
         <div className="flex gap-3">
-          <Button type="submit" loading={loading}>
+          <Button type="submit" loading={submitLoading}>
             Update Leave Type
           </Button>
 

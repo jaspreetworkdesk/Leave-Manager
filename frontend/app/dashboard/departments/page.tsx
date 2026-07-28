@@ -27,7 +27,7 @@ export default function DepartmentsPage() {
   const router = useRouter();
 
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const [search, setSearch] = useState("");
@@ -57,7 +57,7 @@ export default function DepartmentsPage() {
 
   const fetchDepartments = useCallback(async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -93,7 +93,7 @@ export default function DepartmentsPage() {
 
       Swal.fire("Error", "Failed to fetch departments.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   }, [
     router,

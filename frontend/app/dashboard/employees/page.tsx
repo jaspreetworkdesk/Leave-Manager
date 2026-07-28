@@ -47,7 +47,7 @@ export default function EmployeesPage() {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [designations, setDesignations] = useState<Designation[]>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
   const [dropdownLoading, setDropdownLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -102,7 +102,7 @@ export default function EmployeesPage() {
 
   const fetchEmployees = async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -146,7 +146,7 @@ export default function EmployeesPage() {
 
       Swal.fire("Error", "Failed to fetch employees.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

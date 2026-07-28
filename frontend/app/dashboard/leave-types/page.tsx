@@ -28,7 +28,7 @@ export default function LeaveTypesPage() {
   const router = useRouter();
 
   const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
   const [search, setSearch] = useState("");
@@ -60,7 +60,7 @@ export default function LeaveTypesPage() {
 
   const fetchLeaveTypes = useCallback(async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -97,7 +97,7 @@ export default function LeaveTypesPage() {
 
       Swal.fire("Error", "Failed to fetch leave types.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   }, [
     router,

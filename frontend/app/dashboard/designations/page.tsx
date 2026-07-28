@@ -34,7 +34,7 @@ export default function DesignationsPage() {
   const [designations, setDesignations] = useState<Designation[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setSubmitLoading] = useState(true);
   const [departmentLoading, setDepartmentLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -80,7 +80,7 @@ export default function DesignationsPage() {
 
   const fetchDesignations = async () => {
     try {
-      setLoading(true);
+      setSubmitLoading(true);
 
       const token = localStorage.getItem("token");
 
@@ -122,7 +122,7 @@ export default function DesignationsPage() {
 
       Swal.fire("Error", "Failed to fetch designations.", "error");
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 

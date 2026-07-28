@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setSubmitLoading] = useState(false);
 const router = useRouter();
   const handleLogin = async (e: any) => {
 
@@ -19,7 +19,7 @@ const router = useRouter();
 
     try {
 
-      setLoading(true);
+      setSubmitLoading(true);
 
       const response = await api.post("/auth/login", {
         email,
@@ -49,7 +49,7 @@ const router = useRouter();
 
     } finally {
 
-      setLoading(false);
+      setSubmitLoading(false);
 
     }
   };

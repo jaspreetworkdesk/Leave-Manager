@@ -77,7 +77,7 @@ export default function CreateEmployeePage() {
   const [designations, setDesignations] = useState<Designation[]>([]);
 
   const [pageLoading, setPageLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting, setSubmitLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
 
   const handleUnauthorized = useCallback(() => {
@@ -218,7 +218,7 @@ export default function CreateEmployeePage() {
     }
 
     try {
-      setSubmitting(true);
+      setSubmitLoading(true);
       setErrors({});
 
       const token = localStorage.getItem("token");
@@ -292,7 +292,7 @@ export default function CreateEmployeePage() {
         "error"
       );
     } finally {
-      setSubmitting(false);
+      setSubmitLoading(false);
     }
   };
 
