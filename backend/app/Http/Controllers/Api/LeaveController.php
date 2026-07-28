@@ -60,7 +60,7 @@ class LeaveController extends Controller
             $applyLeaveData["leave_id"] = $leave->id;
             $applyLeaveData["user_name"] = $currentUser->name;
             $applyLeaveData["user_email"] = $currentUser->email;
-            Mail::to('jaspreet75820@gmail.com')->send(
+            Mail::to(env('ADMIN_EMAIL'))->send(
                 new ApplyLeaves($applyLeaveData)
             );
         }    
