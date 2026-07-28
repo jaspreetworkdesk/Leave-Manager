@@ -17,7 +17,7 @@ export default function CreateDepartmentPage() {
 
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitLoading, setSubmitLoading] = useState(false);
+  const [submitLoading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -44,7 +44,7 @@ export default function CreateDepartmentPage() {
     }
 
     try {
-      setSubmitLoading(true);
+      setLoading(true);
       setErrors({});
 
       const data = {
@@ -74,7 +74,7 @@ export default function CreateDepartmentPage() {
 
       Swal.fire("Error", "Failed to create department.", "error");
     } finally {
-      setSubmitLoading(false);
+      setLoading(false);
     }
   };
 
