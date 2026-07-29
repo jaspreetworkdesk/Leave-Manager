@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useAuthUser from "@/hooks/useAuthUser";
+import { getUserDetail, updateUser } from "@/services/userService";
 
 export default function DashboardLayout({
   children,
@@ -38,12 +39,14 @@ export default function DashboardLayout({
   };
 
   const linkClass = (href: string) =>
-    `block px-4 py-2 rounded transition ${
-      isActive(href)
-        ? "bg-blue-600 text-white"
-        : "text-white hover:bg-blue-600 hover:text-white"
+    `block px-4 py-2 rounded transition ${isActive(href)
+      ? "bg-blue-600 text-white"
+      : "text-white hover:bg-blue-600 hover:text-white"
     }`;
 
+  if (!user) {
+    return <p className="p-6">User not found.</p>;
+  }
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
@@ -57,94 +60,94 @@ export default function DashboardLayout({
             </Link>
           </li>
           {isEmployee && (
-             <>
-          <li>
-            <Link
-              href="/dashboard/my-leaves"
-              className={linkClass("/dashboard/my-leaves")}
-            >
-              My Leaves
-            </Link>
-          </li>
+            <>
+              <li>
+                <Link
+                  href="/dashboard/my-leaves"
+                  className={linkClass("/dashboard/my-leaves")}
+                >
+                  My Leaves
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/apply-leave"
-              className={linkClass("/dashboard/apply-leave")}
-            >
-              Apply Leave
-            </Link>
-            
-          </li>
+              <li>
+                <Link
+                  href="/dashboard/apply-leave"
+                  className={linkClass("/dashboard/apply-leave")}
+                >
+                  Apply Leave
+                </Link>
 
-          <li>
-            <Link
-              href="/dashboard/profile"
-              className={linkClass("/dashboard/profile")}
-            >
-            My Profile
-            </Link>
-            
-          </li>
-        </>
-        )}
+              </li>
+
+              <li>
+                <Link
+                  href="/dashboard/profile"
+                  className={linkClass("/dashboard/profile")}
+                >
+                  My Profile
+                </Link>
+
+              </li>
+            </>
+          )}
           {isAdmin && (
-             <>
-          <li>
-            <Link
-              href="/dashboard/leave-requests"
-              className={linkClass("/dashboard/leave-requests")}
-            >
-              Leave Requests
-            </Link>
-          </li>
+            <>
+              <li>
+                <Link
+                  href="/dashboard/leave-requests"
+                  className={linkClass("/dashboard/leave-requests")}
+                >
+                  Leave Requests
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/employees"
-              className={linkClass("/dashboard/employees")}
-            >
-              Employees
-            </Link>
-          </li>
+              <li>
+                <Link
+                  href="/dashboard/employees"
+                  className={linkClass("/dashboard/employees")}
+                >
+                  Employees
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/departments"
-              className={linkClass("/dashboard/departments")}
-            >
-              Departments
-            </Link>
-          </li>
+              <li>
+                <Link
+                  href="/dashboard/departments"
+                  className={linkClass("/dashboard/departments")}
+                >
+                  Departments
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/designations"
-              className={linkClass("/dashboard/designations")}
-            >
-              Designations
-            </Link>
-          </li>
+              <li>
+                <Link
+                  href="/dashboard/designations"
+                  className={linkClass("/dashboard/designations")}
+                >
+                  Designations
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/leave-types"
-              className={linkClass("/dashboard/leave-types")}
-            >
-              Leave Types
-            </Link>
-          </li>
+              <li>
+                <Link
+                  href="/dashboard/leave-types"
+                  className={linkClass("/dashboard/leave-types")}
+                >
+                  Leave Types
+                </Link>
+              </li>
 
-          <li>
-            <Link
-              href="/dashboard/leave-balances"
-              className={linkClass("/dashboard/leave-balances")}
-            >
-              Leave Balances
-            </Link>
-          </li>
-          </>
-        )}
+              <li>
+                <Link
+                  href="/dashboard/leave-balances"
+                  className={linkClass("/dashboard/leave-balances")}
+                >
+                  Leave Balances
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
 
         <button
@@ -157,7 +160,23 @@ export default function DashboardLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-10 bg-gray-100">{children}</div>
+
+
+      <div className="flex-1 bg-gray-100">
+        <div className="userInfoBar"> 
+        {!isAdmin ? (
+          <Link href="/dashboard/profile" className="">
+            Hi {user.name}
+          </Link>
+        ) : (
+          <>Hi {user.name}</>
+        )}
+
+        </div>
+        <div className="flex-1 p-10 bg-gray-100">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }

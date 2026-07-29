@@ -13,6 +13,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Password as PasswordBroker;
+use Throwable;
+
 
 class AuthController extends Controller
 {
@@ -144,7 +150,6 @@ public function register(Request $request)
         ]);
     }
 
-    
 
     public function logout(Request $request)
     {
@@ -155,4 +160,85 @@ public function register(Request $request)
             'message' => 'Logged out successfully'
         ]);
     }
+
+     /**
+     * API 1: Send password reset link.
+     */
+    public function forgotPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        try {
+            $status = PasswordBroker::broker('users')->sendResetLink([
+                'email' => $validated['email'],
+            ]);
+
+            if ($status === PasswordBroker::ResetLinkSent) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password reset link sent successfully.',
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => __($status),
+                'status_code' => $status,
+            ], 422);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'success' => false,
+                'message' => $exception->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * API 2: Reset password.
+     */
+   public function resetPassword(Request $request)
+{
+    $validated = $request->validate([
+        'token' => ['required', 'string'],
+        'email' => ['required', 'email'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+    ]);
+
+    $status = PasswordBroker::reset(
+        [
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'password_confirmation' => $request->password_confirmation,
+            'token' => $validated['token'],
+        ],
+        function (User $user, string $password): void {
+            $user->forceFill([
+                'password' => Hash::make($password),
+            ])->setRememberToken(Str::random(60));
+
+            $user->save();
+
+            // Revoke all existing Sanctum tokens.
+            $user->tokens()->delete();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    if ($status !== PasswordBroker::PasswordReset) {
+        return response()->json([
+            'success' => false,
+            'message' => __($status),
+        ], 422);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Password reset successfully. Please log in again.',
+    ]);
+}
 }

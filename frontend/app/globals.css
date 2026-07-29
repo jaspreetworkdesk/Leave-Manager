@@ -33,3 +33,38 @@ body {
 .loginFormbx h1{
   color: white;
 }
+
+.userInfoBar {
+    text-align: end;
+    color: #fff;
+    background: #000;
+    padding: 11px 19px;
+}
+.loginRedirectBt {
+    color: white;
+    text-align: center;
+    margin: auto;
+    display: block;
+}
+.inputDisabled {
+    background: #5e5e5e !important;
+}
+.invalidResetLink {
+    color: white;
+}
+
+.apiStatusMessage {
+    color: #ffffff;
+    text-align: center;
+    background: green;
+    border-radius: 6px;
+    padding: 13px;
+}
+
+.apiErrorMessage {
+    color: #ffffff;
+    text-align: center;
+    background: #8e0000;
+    border-radius: 6px;
+    padding: 13px;
+}

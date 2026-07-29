@@ -10,42 +10,34 @@ import Link from "next/link";
 export default function LoginPage() {
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const [loading, setSubmitLoading] = useState(false);
-const router = useRouter();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
   const handleLogin = async (e: any) => {
 
     e.preventDefault();
 
     try {
 
+      setMessage("");
+      setError("");
       setSubmitLoading(true);
 
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/forgot-password", {
         email,
-        password,
       });
 
       console.log(response.data);
 
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
-
-      localStorage.setItem(
-        "user",
-        JSON.stringify(response.data.user)
-      );
-
+      setMessage(response.data.message);
       //alert("Login successful");
-      router.push("/dashboard");
-
+      //router.push("/dashboard");
+      setEmail("");
     } catch (error: any) {
 
       console.log(error.response?.data);
-      Swal.fire("Error", "Invalid credentials", "error");
+      Swal.fire("Error", "Unable to send the password reset link.", "error");
      // alert("Invalid credentials");
 
     } finally {
@@ -58,13 +50,27 @@ const router = useRouter();
   return (
     <div className="min-h-screen flex items-center justify-center">
 
+
+
       <form
         onSubmit={handleLogin}
         className="loginFormbx w-full max-w-md border p-6 rounded-lg space-y-4"
       >
 
+        {message && (
+          <div role="status" className="apiStatusMessage">
+            {message}
+          </div>
+        )}
+
+        {error && (
+          <div role="alert" className="apiErrorMessage">
+            {error}
+          </div>
+        )}
+
         <h1 className="text-2xl font-bold">
-          Login
+          Forgot Password
         </h1>
 
         <input
@@ -73,27 +79,21 @@ const router = useRouter();
           className="w-full border p-3 rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border p-3 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
 
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-black text-white p-3 rounded"
         >
-          {loading ? "Loading..." : "Login"}
+          {loading ? "Sending..." : "Send password reset link"}
         </button>
-
-        <Link href="/forgot-password" className="loginRedirectBt">
-            Forgot Password
+        <Link href="/login" className="loginRedirectBt">
+            Return to login
         </Link>
+
       </form>
 
     </div>
