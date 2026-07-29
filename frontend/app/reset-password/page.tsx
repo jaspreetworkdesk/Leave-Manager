@@ -250,15 +250,13 @@ function ResetPasswordForm() {
           Reset Password
         </h1>
 
-        <FormInput
-          label=""
+    
+      <input
           type="email"
+          className="w-full border p-3 rounded inputDisabled"
           value={email}
           placeholder="Email"
-          error={errors.email}
-          onChange={() => {}}
-          className="inputDisabled"
-          disabled
+          onChange={(e) => {}}
         />
 
         <FormInput

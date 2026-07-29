@@ -5,8 +5,6 @@ type FormInputProps = {
   placeholder?: string;
   error?: string;
   onChange: (value: string) => void;
-  className: string;
-  disabled: string;
 };
 
 export default function FormInput({
@@ -16,8 +14,6 @@ export default function FormInput({
   placeholder,
   error,
   onChange,
-  className,
-  disabled,
 }: FormInputProps) {
   return (
     <div>
@@ -25,11 +21,10 @@ export default function FormInput({
 
       <input
         type={type}
-        className={`w-full border p-3 rounded ${className}`}
+        className={`w-full border p-3 rounded`}
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
       />
 
       {error && (
