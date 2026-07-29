@@ -197,7 +197,7 @@ export default function EditLeaveTypePage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 border p-6 rounded">
+      <form onSubmit={handleSubmit} className="form-card space-y-6 border p-6 rounded">
         <FormInput
           label="Leave Type Name"
           value={name}

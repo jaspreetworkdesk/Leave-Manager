@@ -374,7 +374,7 @@ if (password.trim()) {
         </p>
       </div>
 
-      <form onSubmit={handleUpdate} className="space-y-6 border p-6 rounded">
+      <form onSubmit={handleUpdate} className="form-card space-y-6 border p-6 rounded">
         <div>
           <h2 className="text-lg font-semibold mb-4">Login Details</h2>
 

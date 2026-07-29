@@ -20,17 +20,17 @@ export default function PaginationControls({
   }
 
   return (
-    <div className="flex justify-between items-center border rounded p-4">
-      <p className="text-sm text-gray-500">
-        Page {currentPage} of {lastPage}
+    <nav className="pagination-shell" aria-label="Pagination">
+      <p>
+        Page <strong>{currentPage}</strong> of <strong>{lastPage}</strong>
       </p>
 
-      <div className="flex gap-2">
+      <div className="pagination-actions">
         <button
           type="button"
           disabled={!canGoPrevious}
           onClick={onPrevious}
-          className="bg-gray-200 px-4 py-2 rounded disabled:opacity-50"
+          className="pagination-button"
         >
           Previous
         </button>
@@ -39,11 +39,11 @@ export default function PaginationControls({
           type="button"
           disabled={!canGoNext}
           onClick={onNext}
-          className="bg-gray-200 px-4 py-2 rounded disabled:opacity-50"
+          className="pagination-button"
         >
           Next
         </button>
       </div>
-    </div>
+    </nav>
   );
 }

@@ -225,7 +225,7 @@ export default function EditLeaveBalancePage() {
         </div>
       </div>
 
-      <form onSubmit={handleUpdate} className="border rounded p-6 space-y-5">
+      <form onSubmit={handleUpdate} className="form-card border rounded p-6 space-y-5">
         <FormInput
           label="New Total Days"
           type="number"

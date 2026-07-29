@@ -246,7 +246,7 @@ export default function ApplyLeavePage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 border p-6 rounded">
+      <form onSubmit={handleSubmit} className="form-card space-y-6 border p-6 rounded">
         <FormSelect
           label="Leave Type"
           value={leaveType}

@@ -8,6 +8,9 @@ type FormSelectProps = {
   value: string;
   error?: string;
   options: Option[];
+  disabled?: boolean;
+  required?: boolean;
+  name?: string;
   onChange: (value: string) => void;
 };
 
@@ -16,16 +19,35 @@ export default function FormSelect({
   value,
   error,
   options,
+  disabled = false,
+  required = false,
+  name,
   onChange,
 }: FormSelectProps) {
+  const selectId =
+    name ||
+    `field-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+  const errorId = `${selectId}-error`;
+
   return (
-    <div>
-      <label className="block mb-1 font-medium">{label}</label>
+    <div className="form-control-group">
+      {label && (
+        <label htmlFor={selectId} className="form-control-label">
+          {label}
+          {required && <span aria-hidden="true"> *</span>}
+        </label>
+      )}
 
       <select
-        className="w-full border p-3 rounded"
+        id={selectId}
+        name={name}
+        className={`form-control ${error ? "has-error" : ""}`}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+        required={required}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
+        onChange={(event) => onChange(event.target.value)}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -34,7 +56,11 @@ export default function FormSelect({
         ))}
       </select>
 
-      {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
+      {error && (
+        <p id={errorId} className="form-error">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -309,7 +309,7 @@ export default function CreateEmployeePage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 border p-6 rounded">
+      <form onSubmit={handleSubmit} className="form-card space-y-6 border p-6 rounded">
         <div>
           <h2 className="text-lg font-semibold mb-4">Login Details</h2>
 

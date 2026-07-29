@@ -247,7 +247,7 @@ export default function MyLeavesPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-start justify-between gap-4">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold">My Leaves</h1>
           <p className="text-gray-500">
@@ -291,7 +291,7 @@ export default function MyLeavesPage() {
         </div>
       </div>
 
-      <div className="border rounded p-4 space-y-4">
+      <div className="filter-card border rounded p-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Search</label>
@@ -444,12 +444,12 @@ export default function MyLeavesPage() {
         </div>
       
       ) : leaves.length === 0 ? (
-        <div className="border p-6 rounded text-center">
+        <div className="empty-state border p-6 rounded text-center">
           <p className="text-gray-500">No leave requests found.</p>
         </div>
       ) : (
         <>
-          <div className="border rounded overflow-x-auto">
+          <div className="table-card border rounded overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-100">

@@ -1,16 +1,22 @@
 type ButtonProps = {
   title: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 };
 
 export default function Button({
   title,
   onClick,
+  type = "button",
+  disabled = false,
 }: ButtonProps) {
   return (
     <button
+      type={type}
       onClick={onClick}
-      className="bg-black text-white px-4 py-2 rounded"
+      disabled={disabled}
+      className="ui-button"
     >
       {title}
     </button>

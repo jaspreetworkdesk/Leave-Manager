@@ -1,20 +1,12 @@
 "use client";
 
-import {
-  FormEvent,
-  Suspense,
-  useState,
-} from "react";
+import { FormEvent, Suspense, useState } from "react";
 import type { AxiosError } from "axios";
 import api from "@/lib/axios";
-import {
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import "../globals.css";
+import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 import Link from "next/link";
-import FormInput from "@/components/ui/FormInput";
+import AuthShell from "@/components/AuthShell";
 
 type FormErrors = {
   email?: string;
@@ -46,15 +38,9 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const [password, setPassword] = useState("");
-  const [
-    passwordConfirmation,
-    setPasswordConfirmation,
-  ] = useState("");
-
-  const [errors, setErrors] =
-    useState<FormErrors>({});
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const validateFrontend = (): boolean => {
     const newErrors: FormErrors = {};
@@ -68,55 +54,26 @@ function ResetPasswordForm() {
     if (!password) {
       newErrors.password = "Password is required.";
     } else if (password.length < 8) {
-      newErrors.password =
-        "Password must be at least 8 characters.";
+      newErrors.password = "Password must be at least 8 characters.";
     }
 
     if (!passwordConfirmation) {
-      newErrors.password_confirmation =
-        "Confirm password is required.";
+      newErrors.password_confirmation = "Confirm password is required.";
     } else if (password !== passwordConfirmation) {
-      newErrors.password_confirmation =
-        "Password confirmation does not match.";
+      newErrors.password_confirmation = "Password confirmation does not match.";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
-  const handlePasswordChange = (value: string) => {
-    setPassword(value);
-
-    setErrors((previousErrors) => ({
-      ...previousErrors,
-      password: undefined,
-    }));
-  };
-
-  const handlePasswordConfirmationChange = (
-    value: string
-  ) => {
-    setPasswordConfirmation(value);
-
-    setErrors((previousErrors) => ({
-      ...previousErrors,
-      password_confirmation: undefined,
-    }));
-  };
-
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     setMessage("");
     setErrorMessage("");
 
     if (!token || !email) {
-      setErrorMessage(
-        "This password reset link is incomplete."
-      );
+      setErrorMessage("This password reset link is incomplete.");
       return;
     }
 
@@ -127,21 +84,15 @@ function ResetPasswordForm() {
     try {
       setLoading(true);
 
-      const response =
-        await api.post<ResetPasswordResponse>(
-          "/reset-password",
-          {
-            token,
-            email,
-            password,
-            password_confirmation:
-              passwordConfirmation,
-          }
-        );
+      const response = await api.post<ResetPasswordResponse>("/reset-password", {
+        token,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+      });
 
       const successMessage =
-        response.data.message ??
-        "Your password has been reset successfully.";
+        response.data.message ?? "Your password has been reset successfully.";
 
       setErrors({});
       setMessage(successMessage);
@@ -153,26 +104,16 @@ function ResetPasswordForm() {
         confirmButtonText: "Continue to login",
       });
 
-      /*
-       * Replace prevents the user from returning
-       * to the reset-password form with Back.
-       */
       router.replace("/login");
     } catch (caughtError: unknown) {
-      const axiosError =
-        caughtError as AxiosError<ApiErrorResponse>;
-
-      const responseData =
-        axiosError.response?.data;
-
-      const backendErrors =
-        responseData?.errors;
+      const axiosError = caughtError as AxiosError<ApiErrorResponse>;
+      const responseData = axiosError.response?.data;
+      const backendErrors = responseData?.errors;
 
       const newErrors: FormErrors = {
         email: backendErrors?.email?.[0],
         password: backendErrors?.password?.[0],
-        password_confirmation:
-          backendErrors?.password_confirmation?.[0],
+        password_confirmation: backendErrors?.password_confirmation?.[0],
       };
 
       setErrors(newErrors);
@@ -202,101 +143,128 @@ function ResetPasswordForm() {
 
   if (!token || !email) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="invalidResetLink w-full max-w-md border p-6 rounded-lg space-y-4">
-          <h1 className="text-2xl font-bold">
-            Invalid reset link
-          </h1>
-
-          <p>
-            This link does not contain the required
-            password reset information.
-          </p>
-
-          <Link href="/forgot-password">
+      <AuthShell
+        eyebrow="Invalid link"
+        title="This reset link cannot be used"
+        subtitle="The link is missing required information or may have been copied incorrectly."
+        showcaseTitle="Protecting your account comes first."
+        showcaseText="Request a fresh reset link to continue securely."
+      >
+        <div className="auth-form">
+          <div role="alert" className="apiErrorMessage">
+            This link does not contain the required password reset information.
+          </div>
+          <Link href="/forgot-password" className="auth-submit">
             Request another reset link
           </Link>
+          <Link href="/login" className="auth-link">
+            Return to sign in
+          </Link>
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="loginFormbx w-full max-w-md border p-6 rounded-lg space-y-4"
-        noValidate
-      >
+    <AuthShell
+      eyebrow="Create new password"
+      title="Set a secure password"
+      subtitle="Use at least eight characters and confirm your new password below."
+      showcaseTitle="A fresh password. The same organized workspace."
+      showcaseText="Create your new password, then return to your leave dashboard securely."
+    >
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         {message && (
-          <div
-            role="status"
-            className="apiStatusMessage"
-          >
+          <div role="status" className="apiStatusMessage">
             {message}
           </div>
         )}
 
         {errorMessage && (
-          <div
-            role="alert"
-            className="apiErrorMessage"
-          >
+          <div role="alert" className="apiErrorMessage">
             {errorMessage}
           </div>
         )}
 
-        <h1 className="text-2xl font-bold">
-          Reset Password
-        </h1>
+        <div className="auth-field">
+          <label htmlFor="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            className="auth-input"
+            value={email}
+            readOnly
+            aria-describedby={errors.email ? "email-error" : undefined}
+          />
+          {errors.email && (
+            <p id="email-error" className="form-error">
+              {errors.email}
+            </p>
+          )}
+        </div>
 
-    
-      <input
-          type="email"
-          className="w-full border p-3 rounded inputDisabled"
-          value={email}
-          placeholder="Email"
-          onChange={(e) => {}}
-        />
+        <div className="auth-field">
+          <label htmlFor="password">New password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            className="auth-input"
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setErrors((previous) => ({ ...previous, password: undefined }));
+            }}
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "password-error" : undefined}
+          />
+          {errors.password && (
+            <p id="password-error" className="form-error">
+              {errors.password}
+            </p>
+          )}
+        </div>
 
-        <FormInput
-          label=""
-          type="password"
-          placeholder="New password"
-          value={password}
-          error={errors.password}
-          onChange={handlePasswordChange}
-        />
+        <div className="auth-field">
+          <label htmlFor="password-confirmation">Confirm password</label>
+          <input
+            id="password-confirmation"
+            name="password_confirmation"
+            type="password"
+            autoComplete="new-password"
+            className="auth-input"
+            placeholder="Re-enter your password"
+            value={passwordConfirmation}
+            onChange={(event) => {
+              setPasswordConfirmation(event.target.value);
+              setErrors((previous) => ({
+                ...previous,
+                password_confirmation: undefined,
+              }));
+            }}
+            aria-invalid={Boolean(errors.password_confirmation)}
+            aria-describedby={
+              errors.password_confirmation ? "password-confirmation-error" : undefined
+            }
+          />
+          {errors.password_confirmation && (
+            <p id="password-confirmation-error" className="form-error">
+              {errors.password_confirmation}
+            </p>
+          )}
+        </div>
 
-        <FormInput
-          label=""
-          type="password"
-          placeholder="Confirm password"
-          value={passwordConfirmation}
-          error={errors.password_confirmation}
-          onChange={
-            handlePasswordConfirmationChange
-          }
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-black text-white p-3 rounded disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {loading
-            ? "Resetting..."
-            : "Reset password"}
+        <button type="submit" disabled={loading} className="auth-submit">
+          {loading ? "Resetting password..." : "Reset password"}
         </button>
 
-        <Link
-          href="/login"
-          className="loginRedirectBt"
-        >
-          Return to login
+        <Link href="/login" className="auth-link">
+          Return to sign in
         </Link>
       </form>
-    </div>
+    </AuthShell>
   );
 }
 
@@ -304,8 +272,11 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          Loading reset form...
+        <div className="auth-page">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
+            <p className="text-sm text-gray-500">Loading reset form...</p>
+          </div>
         </div>
       }
     >

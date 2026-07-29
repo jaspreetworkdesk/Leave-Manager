@@ -1,62 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import api from "@/lib/axios";
-import { useRouter } from "next/navigation";
-import "../globals.css";
 import Swal from "sweetalert2";
 import Link from "next/link";
+import AuthShell from "@/components/AuthShell";
 
-export default function LoginPage() {
-
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setSubmitLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
-  const handleLogin = async (e: any) => {
 
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     try {
-
       setMessage("");
       setError("");
       setSubmitLoading(true);
 
-      const response = await api.post("/forgot-password", {
-        email,
-      });
-
-      console.log(response.data);
+      const response = await api.post("/forgot-password", { email });
 
       setMessage(response.data.message);
-      //alert("Login successful");
-      //router.push("/dashboard");
       setEmail("");
-    } catch (error: any) {
-
-      console.log(error.response?.data);
-      Swal.fire("Error", "Unable to send the password reset link.", "error");
-     // alert("Invalid credentials");
-
+    } catch (caughtError: any) {
+      console.log(caughtError.response?.data);
+      const apiMessage =
+        caughtError.response?.data?.message ||
+        "Unable to send the password reset link.";
+      setError(apiMessage);
+      Swal.fire("Error", apiMessage, "error");
     } finally {
-
       setSubmitLoading(false);
-
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-
-
-
-      <form
-        onSubmit={handleLogin}
-        className="loginFormbx w-full max-w-md border p-6 rounded-lg space-y-4"
-      >
-
+    <AuthShell
+      eyebrow="Account recovery"
+      title="Reset your password"
+      subtitle="We will email you a secure link to create a new password."
+      showcaseTitle="Get back to your workspace securely."
+      showcaseText="Password recovery is quick and protected, so you can return to managing leave requests without delay."
+    >
+      <form onSubmit={handleSubmit} className="auth-form" noValidate>
         {message && (
           <div role="status" className="apiStatusMessage">
             {message}
@@ -69,33 +57,29 @@ export default function LoginPage() {
           </div>
         )}
 
-        <h1 className="text-2xl font-bold">
-          Forgot Password
-        </h1>
+        <div className="auth-field">
+          <label htmlFor="email">Email address</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="name@company.com"
+            className="auth-input"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border p-3 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-black text-white p-3 rounded"
-        >
-          {loading ? "Sending..." : "Send password reset link"}
+        <button type="submit" disabled={loading} className="auth-submit">
+          {loading ? "Sending link..." : "Send reset link"}
         </button>
-        <Link href="/login" className="loginRedirectBt">
-            Return to login
+
+        <Link href="/login" className="auth-link">
+          Return to sign in
         </Link>
-
       </form>
-
-    </div>
+    </AuthShell>
   );
 }

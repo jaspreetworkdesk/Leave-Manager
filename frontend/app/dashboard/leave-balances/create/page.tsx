@@ -293,7 +293,7 @@ export default function CreateLeaveBalancePage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="border rounded p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="form-card border rounded p-6 space-y-5">
         <FormSelect
           label="Employee"
           value={userId}

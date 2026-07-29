@@ -12,30 +12,10 @@ export default function StatCard({
   warning = false,
 }: StatCardProps) {
   return (
-    <div
-      className={`border rounded p-5 ${
-        warning ? "bg-red-50 border-red-200" : "bg-white"
-      }`}
-    >
-      <p className="text-sm text-gray-500">{title}</p>
-
-      <p
-        className={`text-3xl font-bold mt-2 ${
-          warning ? "text-red-600" : "text-gray-900"
-        }`}
-      >
-        {value}
-      </p>
-
-      {description && (
-        <p
-          className={`text-sm mt-2 ${
-            warning ? "text-red-600" : "text-gray-500"
-          }`}
-        >
-          {description}
-        </p>
-      )}
-    </div>
+    <article className={`stat-card ${warning ? "is-warning" : ""}`}>
+      <p className="stat-card-title">{title}</p>
+      <p className="stat-card-value">{value}</p>
+      {description && <p className="stat-card-description">{description}</p>}
+    </article>
   );
 }

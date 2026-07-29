@@ -4,6 +4,7 @@ type ButtonProps = {
   loading?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  className?: string;
 };
 
 export default function Button({
@@ -12,13 +13,15 @@ export default function Button({
   loading = false,
   disabled = false,
   onClick,
+  className = "",
 }: ButtonProps) {
   return (
     <button
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
-      className="bg-blue-600 text-white px-5 py-3 rounded disabled:opacity-60"
+      className={`ui-button ${className}`.trim()}
+      aria-busy={loading}
     >
       {loading ? "Please wait..." : children}
     </button>
