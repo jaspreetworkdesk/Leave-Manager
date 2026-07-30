@@ -7,7 +7,7 @@ const basePath =
   rawBasePath && rawBasePath !== "/"
     ? `/${rawBasePath.replace(/^\/+|\/+$/g, "")}`
     : "";
-
+/*
 const nextConfig = {
   basePath,
   trailingSlash: true,
@@ -15,6 +15,10 @@ const nextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+};
+*/
+const nextConfig = {
+  basePath
 };
 
 export default nextConfig;

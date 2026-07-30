@@ -18,6 +18,9 @@ class Employee extends Model
         'joining_date',
         'salary',
         'address',
+        'alternate_phone',
+        'date_of_birth',
+        'alternate_address',
     ];
 
 // app/Models/Employee.php

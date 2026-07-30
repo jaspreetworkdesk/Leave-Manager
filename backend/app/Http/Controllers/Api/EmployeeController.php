@@ -61,11 +61,14 @@ public function index(Request $request)
             'password'              => ['required', 'string', 'min:8', 'confirmed'],
             'employee_code'         => ['required', 'string', 'max:50', 'unique:employees,employee_code'],
             'phone'                 => ['nullable', 'string', 'max:20'],
+            'alternate_phone'                 => ['nullable', 'string', 'max:20'],
             'designation_id'   => ['required', 'numeric', 'min:0'],
             'department_id'  => ['required', 'numeric', 'min:0'],
             'joining_date'          => ['nullable', 'date'],
+            'date_of_birth'          => ['nullable', 'date'],
             'salary'                => ['nullable', 'numeric', 'min:0'],
             'address'               => ['nullable', 'string', 'max:500'],
+            'alternate_address'               => ['nullable', 'string', 'max:500'],
         ]);
 
         
@@ -81,11 +84,14 @@ public function index(Request $request)
                 'user_id'       => $user->id,
                 'employee_code' => $validated['employee_code'],
                 'phone'         => $validated['phone'] ?? null,
+                'alternate_phone'         => $validated['alternate_phone'] ?? null,
                 'department_id'    => $validated['department_id'],
                 'designation_id'   => $validated['designation_id'],
                 'joining_date'  => $validated['joining_date'] ?? null,
+                'date_of_birth'  => $validated['date_of_birth'] ?? null,
                 'salary'        => $validated['salary'] ?? null,
                 'address'       => $validated['address'] ?? null,
+                'alternate_address'       => $validated['alternate_address'] ?? null,
             ]);
         });
 
@@ -123,12 +129,16 @@ public function update(Request $request, $id)
             Rule::unique('employees', 'employee_code')->ignore($employee->id),
         ],
         'phone'        => ['nullable', 'string', 'max:20'],
+        'alternate_phone'        => ['nullable', 'string', 'max:20'],
         'designation_id'   => ['required', 'numeric', 'min:0'],
         'department_id'  => ['required', 'numeric', 'min:0'],
         'joining_date' => ['nullable', 'date'],
+        'date_of_birth' => ['nullable', 'date'],
         'salary'       => ['nullable', 'numeric', 'min:0'],
         'address'      => ['nullable', 'string', 'max:500'],
+        'alternate_address'  => ['nullable', 'string', 'max:500'],
     ];
+
     if(!empty($request->password)){
         $formInputs['password'] = ['required', 'string', 'min:8', 'confirmed'];        
     }
@@ -142,11 +152,14 @@ public function update(Request $request, $id)
         $employeeData = [
             'employee_code' => $validated['employee_code'],
             'phone'         => $validated['phone'] ?? null,
+            'alternate_phone'         => $validated['alternate_phone'] ?? null,
             'department'    => $validated['department_id'],
             'designation'   => $validated['designation_id'],
             'joining_date'  => $validated['joining_date'] ?? null,
+            'date_of_birth'  => $validated['date_of_birth'] ?? null,
             'salary'        => $validated['salary'] ?? null,
             'address'       => $validated['address'] ?? null,
+            'alternate_address'       => $validated['alternate_address'] ?? null,
         ];
 
         if(!empty($validated['password'])){

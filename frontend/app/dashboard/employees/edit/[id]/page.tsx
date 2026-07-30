@@ -14,6 +14,7 @@ import FormSelect from "@/components/ui/FormSelect";
 import FormTextarea from "@/components/ui/FormTextarea";
 import Button from "@/components/ui/Button";
 
+
 type FormErrors = {
   name?: string;
   email?: string;
@@ -21,12 +22,16 @@ type FormErrors = {
   password_confirmation?: string;
   employee_code?: string;
   phone?: string;
+  alternate_phone?: string;
   department_id?: string;
   designation_id?: string;
   joining_date?: string;
+  date_of_birth?: string;
   salary?: string;
   address?: string;
+  alternate_address?: string;
 };
+
 
 type Department = {
   id: number;
@@ -54,14 +59,17 @@ type Employee = {
   password?: string;
   password_confirmation?: string;
   employee_code?: string;
-  phone?: string | null;
-  department_id?: number | string;
-  designation_id?: number | string;
+  phone?: string;
+  alternate_phone?: string;
+  department_id?: string;
+  designation_id?: string;
   department?: Department | null;
   designation?: Designation | null;
-  joining_date?: string | null;
-  salary?: string | number | null;
-  address?: string | null;
+  joining_date?: string;
+  date_of_birth?: string;
+  salary?: string;
+  address?: string;
+  alternate_address?: string;
 };
 
 type ApiErrorResponse = {
@@ -73,11 +81,14 @@ type ApiErrorResponse = {
     password_confirmation?: string[];
     employee_code?: string[];
     phone?: string[];
+    alternate_phone?: string[];
     department_id?: string[];
     designation_id?: string[];
     joining_date?: string[];
+    date_of_birth?: string[];
     salary?: string[];
     address?: string[];
+    alternate_address?: string[];
   };
 };
 
@@ -93,11 +104,14 @@ export default function EditEmployeePage() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [employeeCode, setEmployeeCode] = useState("");
   const [phone, setPhone] = useState("");
+  const [alternatePhone, setAlternatePhone] = useState("");
   const [departmentId, setDepartmentId] = useState("");
   const [designationId, setDesignationId] = useState("");
   const [joiningDate, setJoiningDate] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [salary, setSalary] = useState("");
   const [address, setAddress] = useState("");
+  const [alternateAddress, setAlternateAddress] = useState("");
 
   const [departments, setDepartments] = useState<Department[]>([]);
   const [designations, setDesignations] = useState<Designation[]>([]);
@@ -148,6 +162,7 @@ export default function EditEmployeePage() {
       setPassword(employee.password || "");
       setPasswordConfirmation(employee.password_confirmation || "");
       setPhone(employee.phone || "");
+      setAlternatePhone(employee.alternate_phone || "");
 
       setDepartmentId(
         employee.department_id
@@ -166,8 +181,10 @@ export default function EditEmployeePage() {
       );
 
       setJoiningDate(employee.joining_date || "");
+      setDateOfBirth(employee.date_of_birth || "");
       setSalary(employee.salary ? String(employee.salary) : "");
       setAddress(employee.address || "");
+      setAlternateAddress(employee.alternate_address || "");
 
       setDepartments(departmentResponse.data.data || []);
       setDesignations(designationResponse.data.data || []);
@@ -297,15 +314,18 @@ if (password.trim()) {
       const data = {
         name: name.trim(),
         email: email.trim(),
+        password,
+        password_confirmation: passwordConfirmation,
         employee_code: employeeCode.trim(),
-        password_confirmation: passwordConfirmation.trim(),
-        password: password.trim(),
         phone: phone.trim() || undefined,
+        alternate_phone: alternatePhone.trim() || undefined,
         department_id: departmentId,
         designation_id: designationId,
         joining_date: joiningDate || undefined,
+        date_of_birth: dateOfBirth || undefined,
         salary: salary || undefined,
         address: address.trim() || undefined,
+        alternate_address: alternateAddress.trim() || undefined,
       };
 
       await updateEmployee(employeeId, data);
@@ -322,15 +342,18 @@ if (password.trim()) {
         setErrors({
           name: backendErrors?.name?.[0],
           email: backendErrors?.email?.[0],
-          employee_code: backendErrors?.employee_code?.[0],
           password: backendErrors?.password?.[0],
           password_confirmation: backendErrors?.password_confirmation?.[0],
+          employee_code: backendErrors?.employee_code?.[0],
           phone: backendErrors?.phone?.[0],
+          alternate_phone: backendErrors?.alternate_phone?.[0],
           department_id: backendErrors?.department_id?.[0],
           designation_id: backendErrors?.designation_id?.[0],
           joining_date: backendErrors?.joining_date?.[0],
+          date_of_birth: backendErrors?.date_of_birth?.[0],
           salary: backendErrors?.salary?.[0],
           address: backendErrors?.address?.[0],
+          alternate_address: backendErrors?.alternate_address?.[0],
         });
 
         return;
@@ -436,6 +459,15 @@ if (password.trim()) {
               onChange={setPhone}
             />
 
+
+              <FormInput
+                label="Alternate Phone"
+                value={alternatePhone}
+                placeholder="Enter alternate phone number"
+                error={errors.alternate_phone}
+                onChange={setAlternatePhone}
+              />
+
             <FormSelect
               label="Department"
               value={departmentId}
@@ -473,6 +505,14 @@ if (password.trim()) {
             />
 
             <FormInput
+              label="Date of Birth"
+              type="date"
+              value={dateOfBirth}
+              error={errors.date_of_birth}
+              onChange={setDateOfBirth}
+            />
+
+            <FormInput
               label="Salary"
               type="number"
               value={salary}
@@ -491,7 +531,18 @@ if (password.trim()) {
               onChange={setAddress}
             />
           </div>
+
+          <div className="mt-4">
+            <FormTextarea
+              label="Alternate employee Address"
+              value={alternateAddress}
+              placeholder="Enter Alternate employee address"
+              error={errors.alternate_address}
+              onChange={setAlternateAddress}
+            />
+          </div>
         </div>
+        
 
         <div className="flex gap-3">
           <Button type="submit" loading={submitLoading}>
