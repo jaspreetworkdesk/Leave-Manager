@@ -115,6 +115,7 @@ export default function LeaveBalancesPage() {
       console.log("Leave balances response:", response.data);
 
       setLeaveBalances(response.data.data || []);
+      console.log(response.data.data);
       setMeta(response.data.meta || emptyPaginationMeta);
     } catch (error: any) {
       console.log(error);

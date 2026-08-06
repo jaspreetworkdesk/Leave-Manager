@@ -18,7 +18,16 @@ class DesignationController extends Controller
             ->latest()
             ->paginate(10);
 
-        return response()->json($designations);
+
+        return response()->json([
+            'data' => $designations->items(),
+            'meta' => [
+                'current_page' => $designations->currentPage(),
+                'last_page' => $designations->lastPage(),
+                'per_page' => $designations->perPage(),
+                'total' => $designations->total(),
+            ]
+        ]);
     }
 
     public function store(Request $request)

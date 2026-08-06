@@ -19,6 +19,8 @@ export default function usePagination(defaultPerPage = 10) {
   const [recordsPerPage] = useState(defaultPerPage);
   const [meta, setMeta] = useState<PaginationMeta>(emptyPaginationMeta);
 
+  
+  //console.log(meta);
   const goToNextPage = () => {
     setCurrentPage((page) => {
       if (page >= meta.last_page) {

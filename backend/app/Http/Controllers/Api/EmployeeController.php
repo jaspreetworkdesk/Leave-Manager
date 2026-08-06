@@ -51,7 +51,18 @@ public function index(Request $request)
         ->latest()
         ->paginate($perPage);
 
-    return response()->json($employees);
+  
+        return response()->json([
+        'data' => $employees->items(),
+        'meta' => [
+            'current_page' => $employees->currentPage(),
+            'last_page' => $employees->lastPage(),
+            'per_page' => $employees->perPage(),
+            'total' => $employees->total(),
+        ]
+    ]);
+    
+
 }
     public function store(Request $request)
     {

@@ -73,6 +73,7 @@ export default function DepartmentsPage() {
       });
 
       setDepartments(response.data.data || []);
+      console.log(response.data.data);
       setMeta(response.data.meta || emptyPaginationMeta);
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
